@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information for patients and caregivers",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "displayName": { "type": "string", "description": "User's full name" },
+        "phoneNumber": { "type": "string", "description": "User's phone number" },
+        "role": { "type": "string", "enum": ["patient", "caregiver"], "description": "User role" },
+        "patientId": { "type": "string", "description": "Linked patient ID for caregivers" },
+        "caregiverId": { "type": "string", "description": "Linked caregiver ID for patients" },
+        "allergies": { "type": "array", "items": { "type": "string" }, "description": "List of allergies" },
+        "age": { "type": "integer", "description": "User's age" },
+        "currentMedications": { "type": "array", "items": { "type": "string" }, "description": "List of current medications" }
+      },
+      "required": ["uid", "email", "displayName", "phoneNumber", "role"]
+    },
+    "Medicine": {
+      "title": "Medicine",
+      "description": "Medicine prescription details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "dosage": { "type": "string" },
+        "frequency": { "type": "string" },
+        "times": { "type": "array", "items": { "type": "string" } },
+        "instructions": { "type": "string" },
+        "startDate": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["active", "completed", "discontinued"] }
+      },
+      "required": ["id", "name", "dosage", "frequency", "times", "status"]
+    },
+    "DoseRecord": {
+      "title": "DoseRecord",
+      "description": "Record of a specific medicine dose",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "medicineId": { "type": "string" },
+        "medicineName": { "type": "string" },
+        "scheduledTime": { "type": "string", "format": "date-time" },
+        "takenTime": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["taken", "missed", "pending"] },
+        "escalationLevel": { "type": "integer" }
+      },
+      "required": ["id", "medicineId", "medicineName", "scheduledTime", "status", "escalationLevel"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile data"
+    },
+    "/users/{userId}/medicines/{medicineId}": {
+      "schema": "Medicine",
+      "description": "Patient's medicine list"
+    },
+    "/users/{userId}/doses/{doseId}": {
+      "schema": "DoseRecord",
+      "description": "Patient's dose history"
+    }
+  }
+}

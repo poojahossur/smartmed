@@ -1,0 +1,5 @@
+{
+  "name": "Smart Medicine Assistant System",
+  "description": "A comprehensive healthcare platform for medicine management, smart reminders with multi-level escalation, and caregiver monitoring.",
+  "requestFramePermissions": ["geolocation", "microphone"]
+}

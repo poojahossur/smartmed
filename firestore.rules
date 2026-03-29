@@ -1,0 +1,152 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId}
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required, email format)
+    //   - displayName: string (required)
+    //   - phoneNumber: string (required)
+    //   - role: string (required, enum: ['patient', 'caregiver'])
+    //   - patientId: string (optional)
+    //   - caregiverId: string (optional)
+    //   - allergies: list (optional)
+    //   - age: number (optional)
+    //   - currentMedications: list (optional)
+    //   - isOnboarded: bool (optional)
+    //   - reminderPreference: string (optional, enum: ['SMS', 'CALL', 'BOTH'])
+    //   - chronicConditions: list (optional)
+    //   - emergencyContact: map (optional, {name, phone, relationship})
+    //
+    // Subcollection: users/{userId}/medicines
+    // Document ID: {medicineId}
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required)
+    //   - dosage: string (required)
+    //   - frequency: string (required)
+    //   - times: list (required)
+    //   - instructions: string (optional)
+    //   - startDate: string (required, date-time format)
+    //   - status: string (required, enum: ['active', 'completed', 'discontinued'])
+    //
+    // Subcollection: users/{userId}/doses
+    // Document ID: {doseId}
+    // Fields:
+    //   - id: string (required)
+    //   - medicineId: string (required)
+    //   - medicineName: string (required)
+    //   - scheduledTime: string (required, date-time format)
+    //   - takenTime: string (optional, date-time format)
+    //   - status: string (required, enum: ['taken', 'missed', 'pending'])
+    //   - escalationLevel: number (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidUser(data) {
+      let allowedFields = ['uid', 'email', 'displayName', 'phoneNumber', 'role', 'allergies', 'age', 'currentMedications', 'isOnboarded', 'reminderPreference', 'chronicConditions', 'emergencyContact'];
+      return hasOnlyAllowedFields(allowedFields) &&
+             data.uid == request.auth.uid &&
+             data.email is string && isValidEmail(data.email) &&
+             data.displayName is string && data.displayName.size() > 0 && data.displayName.size() < 100 &&
+             data.phoneNumber is string &&
+             data.role == 'patient' &&
+             (!('age' in data) || data.age is number) &&
+             (!('allergies' in data) || data.allergies is list) &&
+             (!('currentMedications' in data) || data.currentMedications is list) &&
+             (!('isOnboarded' in data) || data.isOnboarded is bool) &&
+             (!('reminderPreference' in data) || data.reminderPreference in ['SMS', 'CALL', 'BOTH']) &&
+             (!('chronicConditions' in data) || data.chronicConditions is list) &&
+             (!('emergencyContact' in data) || (data.emergencyContact is map && 
+               data.emergencyContact.get('name', '') is string &&
+               data.emergencyContact.get('phone', '') is string &&
+               data.emergencyContact.get('relationship', '') is string));
+    }
+
+    function isValidMedicine(data) {
+      let allowedFields = ['id', 'name', 'dosage', 'frequency', 'times', 'instructions', 'startDate', 'endDate', 'status'];
+      return hasOnlyAllowedFields(allowedFields) &&
+             (!('id' in data) || data.id is string) &&
+             data.name is string && data.name.size() > 0 &&
+             data.dosage is string &&
+             data.frequency is string &&
+             data.times is list &&
+             (!('instructions' in data) || data.instructions is string) &&
+             isValidDateString(data.startDate) &&
+             (!('endDate' in data) || isValidDateString(data.endDate)) &&
+             data.status in ['active', 'completed', 'discontinued', 'deleted'];
+    }
+
+    function isValidDose(data) {
+      let allowedFields = ['id', 'medicineId', 'medicineName', 'scheduledTime', 'takenTime', 'status', 'escalationLevel', 'reminderSent'];
+      return hasOnlyAllowedFields(allowedFields) &&
+             (!('id' in data) || data.id is string) &&
+             data.medicineId is string &&
+             data.medicineName is string &&
+             isValidDateString(data.scheduledTime) &&
+             (!('takenTime' in data) || data.takenTime == null || isValidDateString(data.takenTime)) &&
+             data.status in ['taken', 'missed', 'pending', 'deleted'] &&
+             data.escalationLevel is number &&
+             (!('reminderSent' in data) || data.reminderSent is bool);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+
+      match /medicines/{medicineId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidMedicine(request.resource.data);
+        allow update: if isOwner(userId) && isValidMedicine(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+
+      match /doses/{doseId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidDose(request.resource.data);
+        allow update: if isOwner(userId) && isValidDose(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+
+      match /logs/{logId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId);
+      }
+    }
+  }
+}
