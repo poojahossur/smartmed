@@ -35,9 +35,31 @@ let adminApp: any = null;
 
 try {
   if (getApps().length === 0) {
-    adminApp = initializeApp({
-      projectId: firebaseConfig.projectId,
-    });
+    const serviceAccountJson =
+      process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+
+    if (serviceAccountJson) {
+      // Render / production
+      const serviceAccount = JSON.parse(serviceAccountJson);
+
+      adminApp = initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        projectId: firebaseConfig.projectId,
+      });
+
+      console.log(
+        "[Firebase Admin] Initialized using service account credentials"
+      );
+    } else {
+      // Local development
+      adminApp = initializeApp({
+        projectId: firebaseConfig.projectId,
+      });
+
+      console.log(
+        "[Firebase Admin] Initialized using local Google credentials"
+      );
+    }
   } else {
     adminApp = getApps()[0];
   }
@@ -47,7 +69,7 @@ try {
   );
 } catch (e) {
   console.error(
-    "[Firebase Admin] Initialization warning:",
+    "[Firebase Admin] Initialization error:",
     e
   );
 }
