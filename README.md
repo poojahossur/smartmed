@@ -1,6 +1,6 @@
 # SmartMed
 
-SmartMed is an AI-powered medicine management and healthcare assistance platform designed to help users manage medications, receive automated reminders, monitor adherence, and access AI-assisted healthcare information.
+SmartMed is an AI-powered medicine management and healthcare assistance platform designed to help users manage medications, receive automated reminders, monitor medication adherence, and access AI-assisted healthcare information.
 
 The platform combines medication scheduling, SMS and voice reminders, interactive voice confirmation, caregiver notifications, prescription analysis, medicine substitution information, adherence tracking, and healthcare discovery.
 
@@ -45,13 +45,17 @@ The platform combines medication scheduling, SMS and voice reminders, interactiv
         v
  Medication
   Adherence
+```
+
 The application uses a React and TypeScript frontend with a Node.js and Express backend.
 
 Firebase provides authentication and cloud data storage, Google Gemini powers AI-assisted functionality, and Twilio handles SMS and voice communication.
 
-Interactive Voice Reminder
+## Interactive Voice Reminder
 
 A key feature of SmartMed is its interactive medication reminder through voice calls.
+
+```text
 Medication Schedule
         |
         v
@@ -65,41 +69,57 @@ Twilio Voice Call
         v                      v
       Press 1                Press 2
   Medication Taken      Remind Again Later
+```
+
 The system processes keypad input using DTMF and updates the medication status accordingly.
 
-Technology Stack
-| Category          | Technologies                   |
-| ----------------- | ------------------------------ |
-| Frontend          | React, TypeScript, Vite        |
-| Styling           | Tailwind CSS                   |
-| Backend           | Node.js, Express               |
-| Database          | Firebase Firestore             |
-| Authentication    | Firebase Authentication        |
-| AI                | Google Gemini API              |
-| Communication     | Twilio SMS, Twilio Voice, DTMF |
-| Healthcare / Maps | Leaflet, OpenStreetMap         |
-| Deployment        | Render                         |
-| Version Control   | Git, GitHub                    |
+---
 
-Installation
+## Technology Stack
 
-Prerequisites
- -Node.js
- -npm
- -Git
+| Category | Technologies |
+|---|---|
+| Frontend | React, TypeScript, Vite |
+| Styling | Tailwind CSS |
+| Backend | Node.js, Express |
+| Database | Firebase Firestore |
+| Authentication | Firebase Authentication |
+| AI | Google Gemini API |
+| Communication | Twilio SMS, Twilio Voice, DTMF |
+| Healthcare / Maps | Leaflet, OpenStreetMap |
+| Deployment | Render |
+| Version Control | Git, GitHub |
 
-Clone the Repository
+---
 
+## Installation
+
+### Prerequisites
+
+- Node.js
+- npm
+- Git
+
+### Clone the Repository
+
+```bash
 git clone https://github.com/poojahossur/SmartMed.git
 cd SmartMed
+```
 
-Install Dependencies
+### Install Dependencies
 
+```bash
 npm install
+```
 
-Environment Variables
+---
 
-Create a .env file in the project root.
+## Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
 GEMINI_API_KEY=your_gemini_api_key
 
 TWILIO_ACCOUNT_SID=your_twilio_account_sid
@@ -107,31 +127,47 @@ TWILIO_AUTH_TOKEN=your_twilio_auth_token
 TWILIO_PHONE_NUMBER=your_twilio_phone_number
 
 FIREBASE_SERVICE_ACCOUNT_JSON=your_firebase_service_account_credentials
-Never commit API keys, authentication tokens, Firebase service-account credentials, or .env files to GitHub.
+```
+
+Never commit API keys, authentication tokens, Firebase service-account credentials, or `.env` files to GitHub.
 
 For deployment, configure these values through the hosting platform's environment-variable settings.
 
-Running Locally
+---
+
+## Running Locally
 
 Start the development server:
+
+```bash
 npm run dev
+```
 
 The application will normally be available at:
 
+```text
 http://localhost:3000
+```
 
 The port may vary depending on the environment.
 
-Production Build
+---
+
+## Production Build
 
 Create a production build with:
 
+```bash
 npm run build
+```
 
-Deployment
+---
+
+## Deployment
 
 SmartMed is deployed using Render.
 
+```text
 GitHub
    |
    v
@@ -143,10 +179,13 @@ SmartMed Application
    +----------+----------+
    |          |          |
 Firebase   Gemini     Twilio
+```
 
 Production credentials are configured through Render environment variables and are not stored in the GitHub repository.
 
-Twilio Trial Account
+---
+
+## Twilio Trial Account
 
 The current live demonstration uses a Twilio Trial account.
 
@@ -158,61 +197,61 @@ Trial accounts may also require recipient phone-number verification and may have
 
 For production usage, a fully configured Twilio account would be required.
 
-Medical Safety Disclaimer
+---
+
+## Medical Safety Disclaimer
 
 SmartMed is a medication management and healthcare assistance platform. It is not intended to diagnose medical conditions, prescribe medication, replace professional medical advice, or independently recommend medication changes.
 
 AI-generated information may be incomplete or inaccurate. Medication names, dosages, substitutions, and treatment decisions should be verified with a qualified healthcare professional.
 
-Future Enhancements
-Multilingual voice and SMS reminders
-Dedicated mobile application
-Advanced medication adherence prediction
-Enhanced caregiver dashboard
-Doctor and pharmacy integration
-Medication refill prediction
-Wearable device integration
-Improved accessibility and voice interaction
-Project Status
+---
+
+## Future Enhancements
+
+- Multilingual voice and SMS reminders
+- Dedicated mobile application
+- Advanced medication adherence prediction
+- Enhanced caregiver dashboard
+- Doctor and pharmacy integration
+- Medication refill prediction
+- Wearable device integration
+- Improved accessibility and voice interaction
+
+---
+
+## Project Status
 
 SmartMed is currently deployed as a functional project demonstration.
 
 The current implementation includes:
 
-Firebase Authentication
-Medication management and scheduling
-Automated SMS reminders
-Automated voice reminders
-Interactive voice confirmation
-Caregiver notifications
-Firebase Firestore integration
-Gemini AI integration
-Prescription analysis
-Medicine substitution information
-Medication adherence tracking
-Healthcare discovery
-Author
+- Firebase Authentication
+- Medication management and scheduling
+- Automated SMS reminders
+- Automated voice reminders
+- Interactive voice confirmation
+- Caregiver notifications
+- Firebase Firestore integration
+- Gemini AI integration
+- Prescription analysis
+- Medicine substitution information
+- Medication adherence tracking
+- Healthcare discovery
 
-H Pooja
+---
 
-Data Science Engineering Student
+## Author
+
+**H Pooja**
+
+Data Science Engineering Student  
 Ballari Institute of Technology and Management
 
-GitHub: @poojahossur
+GitHub: [@poojahossur](https://github.com/poojahossur)
 
-License
+---
+
+## License
 
 This project is developed as an academic and portfolio project.
-
-
-
-### After saving
-
-
-Run exactly:
-
-
-```powershell
-git add README.md
-git commit -m "Add professional README"
-git push
