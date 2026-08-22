@@ -1,20 +1,48 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 💊 SmartMed — Smart Medicine Assistant
 
-# Run and deploy your AI Studio app
+SmartMed is an AI-powered medicine management and healthcare assistance platform designed to help patients, elderly users, and caregivers manage medications more safely and effectively.
 
-This contains everything you need to run your app locally.
+## 🚀 Live Demo
 
-View your app in AI Studio: https://ai.studio/apps/63a4bb59-3567-4435-8c2d-00fb269cbe55
+> Deployment coming soon.
 
-## Run Locally
+## Overview
 
-**Prerequisites:**  Node.js
+SmartMed combines medication management, adherence tracking, AI-assisted medicine and prescription analysis, healthcare facility discovery, and automated SMS/voice reminders into a single platform.
 
+## Key Features
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- 💊 Medication management
+- 📊 Medication adherence tracking
+- 🤖 AI medicine assistant
+- 📷 Medicine image analysis
+- 📄 Prescription analysis
+- 🔄 Medicine substitution information
+- 📞 Twilio SMS and voice reminders
+- 👨‍👩‍👧 Caregiver notifications
+- 🏥 Healthcare and pharmacy finder
+- 🗺️ Interactive healthcare map
+- 👨‍⚕️ Doctor medication adherence report
+
+## Technology Stack
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Node.js
+- Express
+- Firebase Firestore
+- Google Gemini API
+- Twilio
+- Leaflet
+- OpenStreetMap
+
+## Local Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/poojahossur/SmartMed.git
+cd SmartMed
+npm install
